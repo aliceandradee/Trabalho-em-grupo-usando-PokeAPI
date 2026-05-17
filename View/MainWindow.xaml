@@ -1,12 +1,60 @@
-﻿<Window x:Class="PokeAPI.MainWindow"
+﻿<Window x:Class="PokeAPI.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PokeAPI"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="PokeAPI - Painel de Ingestão e Relatórios" Height="550" Width="450"
+        WindowStartupLocation="CenterScreen">
 
-    </Grid>
+	<Grid Background="#F8F9FA">
+		<StackPanel Margin="20">
+
+			<TextBlock Text="Módulo de Ingestão de Dados"
+                       FontSize="22"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="#2B3E50"
+                       Margin="0,0,5,5"/>
+
+			<TextBlock Text="Geração de inteligência competitiva para relatórios"
+                       FontSize="12"
+                       HorizontalAlignment="Center"
+                       Foreground="#95A5A6"
+                       Margin="0,0,0,20"/>
+
+			<Button x:Name="BtnCarregar"
+                    Content="Buscar e Processar Dados da API"
+                    Click="BtnCarregar_Click"
+                    Padding="12"
+                    Background="#2ECC71"
+                    Foreground="White"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Margin="0,0,0,15"/>
+
+			<ListBox x:Name="ListaPokemons" Height="340" Background="White" BorderThickness="1" BorderBrush="#E2E8F0">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Border BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" Padding="10">
+							<Grid Width="370">
+
+								<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+									<Image Source="{Binding SpriteUrl}" Width="55" Height="55" Margin="0,0,12,0"/>
+
+									<StackPanel VerticalAlignment="Center">
+										<TextBlock Text="{Binding name}" FontSize="16" FontWeight="Bold" Foreground="#1E293B"/>
+										<TextBlock Text="{Binding CompetitiveRole}" FontSize="12" Foreground="#059669" FontWeight="SemiBold" Margin="0,3,0,0"/>
+									</StackPanel>
+								</StackPanel>
+
+								<StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
+									<TextBlock Text="TOTAL STATUS" FontSize="9" HorizontalAlignment="Center" Foreground="#64748B"/>
+									<TextBlock Text="{Binding BaseStatTotal}" FontSize="16" FontWeight="Bold" Foreground="#EA580C"/>
+								</StackPanel>
+
+							</Grid>
+						</Border>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</StackPanel>
+	</Grid>
 </Window>

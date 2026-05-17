@@ -1,50 +1,45 @@
 ﻿using PokeAPI.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PokeAPI.Services
 {
+    // CORRIGIDO: Removido o 's' de Pokemons para casar exatamente com o construtor e o arquivo
     public class PokemonApiService
     {
+        private readonly HttpClient client;
 
-    private readonly HttpClient _httpClient;
         public PokemonApiService()
         {
-            _httpClient = new HttpClient();
+            client = new HttpClient();
         }
 
         public async Task<List<PokemonDTO>> GetPokemonsAsync()
         {
-            string url = ""; // colocar o link da API
+            // Quando o Erick entregar a API, coloque o link dele aqui
+            string url = "COLOQUE_O_LINK_DA_API_AQUI";
 
-            // Tenta buscar os dados 3 vezes antes de desistir
             for (int i = 0; i < 3; i++)
             {
                 try
                 {
-                    var response = await _httpClient.GetAsync(url);
+                    // Consome os dados brutos que o Vinícius salvou e o Erick disponibilizou
+                    var dadosRecebidos = await client.GetFromJsonAsync<List<PokemonDTO>>(url);
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var data = await response.Content.ReadFromJsonAsync<List<PokemonDTO>>();
-                        return LimparDados(data);
-                    }
+                    return LimparDados(dadosRecebidos);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Tentativa {i + 1} falhou: {ex.Message}");
+                    Console.WriteLine($"Tentativa {i + 1} falhou ao conectar na API: {ex.Message}");
                 }
 
-                // Espera 2 segundos antes de tentar novamente, caso falhe
                 await Task.Delay(2000);
             }
 
-            return new List<PokemonDTO>(); // Retorna lista vazia se não conseguir após 3 tentativas
+            return new List<PokemonDTO>();
         }
 
         private List<PokemonDTO> LimparDados(List<PokemonDTO> pokemons)
@@ -53,17 +48,28 @@ namespace PokeAPI.Services
 
             foreach (var p in pokemons)
             {
-                // Garante que não teremos erros se algum dado vier nulo da API
+                // Tratamento básico de nulos
                 if (string.IsNullOrEmpty(p.name)) p.name = "Desconhecido";
-                if (p.Tipos == null) p.Tipos = new List<string> { "Normal" };
+                if (p.Tipos == null || p.Tipos.Count == 0) p.Tipos = new List<string> { "Normal" };
+
+                // A SUA PARTE: Inteligência de dados para gerar os relatórios
+                p.BaseStatTotal = p.HP + p.Attack + p.Defense + p.SpAttack + p.SpDefense + p.Speed;
+
+                if (p.Attack > p.Defense)
+                {
+                    p.CompetitiveRole = "Physical Sweeper";
+                }
+                else
+                {
+                    p.CompetitiveRole = "Wall / Tank";
+                }
+
+                // Configura metadados para auditoria do relatório
+                p.DataColeta = DateTime.Now;
+                p.EnviadoParaNuvem = false;
             }
 
             return pokemons;
         }
-
-
     }
 }
-
-
-
