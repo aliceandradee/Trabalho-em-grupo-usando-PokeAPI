@@ -36,7 +36,7 @@ namespace PokeAPI.View
                 }
 
                 ListaPokemons.ItemsSource = _dadosAtuais;
-                MessageBox.Show($"Sucesso! {_dadosAtuais.Count} Pokémon(s) carregados da nuvem.\n\n - - - Clique em cima dos Pokémons desejados para selecioná-los e exportar apenas eles!");
+                MessageBox.Show($"Sucesso! {_dadosAtuais.Count} Pokémon(s) carregados da nuvem.\n\n - Clique em cima dos Pokémons desejados para selecioná-los e exportar apenas eles!");
             }
             catch (Exception ex)
             {

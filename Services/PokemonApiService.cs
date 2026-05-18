@@ -11,8 +11,6 @@ namespace PokeAPI.Services
     public class PokemonApiService
     {
         private readonly HttpClient client;
-
-        // 🎯 URL COMPLETA DO SWAGGER (image_6fcdeb.png)
         private const string Url = "https://apimonsterdeconexao-366354054678.southamerica-east1.run.app/api/PokemonData/relatorios";
 
         public PokemonApiService()
@@ -29,7 +27,7 @@ namespace PokeAPI.Services
             {
                 string jsonPuro = await client.GetStringAsync(Url);
 
-                // Se voltar vazio ou o site do swagger, ignora para não quebrar o app
+                // Se voltar vazio ou o site do swagger, ignora para não quebrar o app - correção do erro que estava dando e essa foi a solução encontrada:
                 if (string.IsNullOrEmpty(jsonPuro) || jsonPuro.Trim() == "[]" || jsonPuro.Contains("<!DOCTYPE html>"))
                 {
                     return new List<PokemonDTO>();
