@@ -15,10 +15,22 @@
             <TextBlock Text="GERAÇÃO DE RELATÓRIO" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
         </Border>
 
-        <ListBox x:Name="ListaPokemons" Grid.Row="1" Margin="15" Background="Transparent" BorderThickness="0">
+        <ListBox x:Name="ListaPokemons" Grid.Row="1" Margin="15" Background="Transparent" BorderThickness="0" SelectionMode="Multiple">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="Margin" Value="0,5"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#E2E8F0"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.ItemContainerStyle>
+
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="White" CornerRadius="8" Margin="0,5" Padding="15" BorderThickness="1" BorderBrush="#CBD5E1">
+                    <Border Background="White" CornerRadius="8" Padding="15" BorderThickness="1" BorderBrush="#CBD5E1">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="80"/>

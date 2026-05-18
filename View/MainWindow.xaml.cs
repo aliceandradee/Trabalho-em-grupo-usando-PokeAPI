@@ -27,7 +27,6 @@ namespace PokeAPI.View
                 BtnCarregar.IsEnabled = false;
                 ListaPokemons.ItemsSource = null;
 
-                // Chama a service com a URL e os cabeçalhos corretos configurados
                 _dadosAtuais = await _apiService.GetPokemonsAsync();
 
                 if (_dadosAtuais == null || _dadosAtuais.Count == 0)
@@ -36,9 +35,8 @@ namespace PokeAPI.View
                     return;
                 }
 
-                // Vincula os dados diretamente na tela do app
                 ListaPokemons.ItemsSource = _dadosAtuais;
-                MessageBox.Show($"Sucesso! {_dadosAtuais.Count} Pokémon(s) carregados da nuvem.", "PokeAPI");
+                MessageBox.Show($"Sucesso! {_dadosAtuais.Count} Pokémon(s) carregados da nuvem.\n\n💡 Clique em cima dos Pokémons desejados para selecioná-los e exportar apenas eles!", "PokeAPI");
             }
             catch (Exception ex)
             {
@@ -52,9 +50,24 @@ namespace PokeAPI.View
 
         private void BtnExportar_Click(object sender, RoutedEventArgs e)
         {
-            if (_dadosAtuais == null || _dadosAtuais.Count == 0)
+            // 🎯 CAPTURA RIGOROSA: Lê exatamente o que está marcado como selecionado na tela
+            var pokemonsSelecionados = new List<PokemonDTO>();
+
+            if (ListaPokemons.SelectedItems != null)
             {
-                MessageBox.Show("Carregue os dados antes de exportar.", "Aviso");
+                foreach (var item in ListaPokemons.SelectedItems)
+                {
+                    if (item is PokemonDTO pokemon)
+                    {
+                        pokemonsSelecionados.Add(pokemon);
+                    }
+                }
+            }
+
+            // Se o usuário clicar em exportar sem ter marcado nenhum card azul na tela, nós barramos aqui:
+            if (pokemonsSelecionados.Count == 0)
+            {
+                MessageBox.Show("Por favor, clique em cima de pelo menos um Pokémon na lista para selecioná-lo antes de salvar o relatório.", "Nenhum Pokémon Selecionado");
                 return;
             }
 
@@ -63,7 +76,7 @@ namespace PokeAPI.View
                 SaveFileDialog salvarArquivo = new SaveFileDialog
                 {
                     Filter = "Arquivo de Texto (*.txt)|*.txt",
-                    FileName = "Relatorio_Pokemon"
+                    FileName = "Relatorio_Pokemon_Personalizado"
                 };
 
                 if (salvarArquivo.ShowDialog() == true)
@@ -71,11 +84,13 @@ namespace PokeAPI.View
                     using (StreamWriter sw = new StreamWriter(salvarArquivo.FileName))
                     {
                         sw.WriteLine("=========================================");
-                        sw.WriteLine("       RELATÓRIO ESTRATÉGICO POKÉMON     ");
+                        sw.WriteLine("   RELATÓRIO ESTRATÉGICO PERSONALIZADO   ");
                         sw.WriteLine("=========================================");
-                        sw.WriteLine($"Gerado em: {DateTime.Now}\n");
+                        sw.WriteLine($"Gerado em: {DateTime.Now}");
+                        sw.WriteLine($"Total de monstros salvos: {pokemonsSelecionados.Count}\n");
 
-                        foreach (var p in _dadosAtuais)
+                        // Escreve APENAS os selecionados salvos na nossa lista temporária
+                        foreach (var p in pokemonsSelecionados)
                         {
                             sw.WriteLine($"Nome: {p.NomeExibicao}");
                             sw.WriteLine($"Tipos: {string.Join(", ", p.Tipos)}");
@@ -86,7 +101,7 @@ namespace PokeAPI.View
                         }
                     }
 
-                    MessageBox.Show("Relatório em texto exportado com sucesso!", "Sucesso");
+                    MessageBox.Show($"Relatório personalizado com {pokemonsSelecionados.Count} monstro(s) exportado com sucesso!", "Sucesso");
                 }
             }
             catch (Exception ex)
