@@ -31,12 +31,12 @@ namespace PokeAPI.View
 
                 if (_dadosAtuais == null || _dadosAtuais.Count == 0)
                 {
-                    MessageBox.Show("Nenhum Pokémon válido encontrado no servidor do Erick.", "Aviso");
+                    MessageBox.Show("Nenhum Pokémon válido encontrado na API.", "Aviso");
                     return;
                 }
 
                 ListaPokemons.ItemsSource = _dadosAtuais;
-                MessageBox.Show($"Sucesso! {_dadosAtuais.Count} Pokémon(s) carregados da nuvem.\n\n💡 Clique em cima dos Pokémons desejados para selecioná-los e exportar apenas eles!", "PokeAPI");
+                MessageBox.Show($"Sucesso! {_dadosAtuais.Count} Pokémon(s) carregados da nuvem.\n\n - - - Clique em cima dos Pokémons desejados para selecioná-los e exportar apenas eles!");
             }
             catch (Exception ex)
             {
@@ -84,10 +84,10 @@ namespace PokeAPI.View
                     using (StreamWriter sw = new StreamWriter(salvarArquivo.FileName))
                     {
                         sw.WriteLine("=========================================");
-                        sw.WriteLine("   RELATÓRIO ESTRATÉGICO PERSONALIZADO   ");
+                        sw.WriteLine("   RELATÓRIO - POKEAPI   ");
                         sw.WriteLine("=========================================");
                         sw.WriteLine($"Gerado em: {DateTime.Now}");
-                        sw.WriteLine($"Total de monstros salvos: {pokemonsSelecionados.Count}\n");
+                        sw.WriteLine($"Total de pokémons salvos: {pokemonsSelecionados.Count}\n");
 
                         // Escreve APENAS os selecionados salvos na nossa lista temporária
                         foreach (var p in pokemonsSelecionados)
@@ -101,7 +101,7 @@ namespace PokeAPI.View
                         }
                     }
 
-                    MessageBox.Show($"Relatório personalizado com {pokemonsSelecionados.Count} monstro(s) exportado com sucesso!", "Sucesso");
+                    MessageBox.Show($"Relatório com {pokemonsSelecionados.Count} pokémon(s) exportado com sucesso!");
                 }
             }
             catch (Exception ex)
