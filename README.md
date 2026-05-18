@@ -26,5 +26,9 @@ Ao invés de apenas exibir dados brutos na tela, a minha contribuição foca em 
 
 ---
 
+
+<div align="center">
+<img src="Imagens/Imagem_funcionamento_do_projeto.jpeg" alt="Descrição" width="400"/>
+</div>
 #### Escola De Programação e Robótica - SENAI
 #### Orientado por: Fred Aguiar
