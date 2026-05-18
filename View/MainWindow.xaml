@@ -1,60 +1,60 @@
 ﻿<Window x:Class="PokeAPI.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="PokeAPI - Painel de Ingestão e Relatórios" Height="550" Width="450"
+        Title="PokeAPI - Sistema de Relatórios" Height="700" Width="550"
         WindowStartupLocation="CenterScreen">
 
-    <Grid Background="#F8F9FA">
-        <StackPanel Margin="20">
+    <Grid Background="#F1F5F9">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-            <TextBlock Text="Módulo de Ingestão de Dados"
-                       FontSize="22"
-                       FontWeight="Bold"
-                       HorizontalAlignment="Center"
-                       Foreground="#2B3E50"
-                       Margin="0,0,5,5"/>
+        <Border Background="#2D3E50" Padding="20" Grid.Row="0">
+            <TextBlock Text="GERAÇÃO DE RELATÓRIO" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+        </Border>
 
-            <TextBlock Text="Geração de inteligência competitiva para relatórios"
-                       FontSize="12"
-                       HorizontalAlignment="Center"
-                       Foreground="#95A5A6"
-                       Margin="0,0,0,20"/>
+        <ListBox x:Name="ListaPokemons" Grid.Row="1" Margin="15" Background="Transparent" BorderThickness="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="White" CornerRadius="8" Margin="0,5" Padding="15" BorderThickness="1" BorderBrush="#CBD5E1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="80"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="100"/>
+                            </Grid.ColumnDefinitions>
 
-            <Button x:Name="BtnCarregar"
-                    Content="Buscar e Processar Dados da API"
-                    Click="BtnCarregar_Click"
-                    Padding="12"
-                    Background="#2ECC71"
-                    Foreground="White"
-                    FontWeight="Bold"
-                    BorderThickness="0"
-                    Margin="0,0,0,15"/>
+                            <Image Source="{Binding SpriteUrl}" Grid.Column="0" Width="70" Height="70" Stretch="Uniform"/>
 
-            <ListBox x:Name="ListaPokemons" Height="340" Background="White" BorderThickness="1" BorderBrush="#E2E8F0">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="#F1F5F9" BorderThickness="0,0,0,1" Padding="10">
-                            <Grid Width="370">
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
+                                <TextBlock Text="{Binding name}" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
+                                <TextBlock Text="{Binding CompetitiveRole}" FontSize="13" Foreground="#059669" FontWeight="SemiBold" Margin="0,2,0,5"/>
 
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                                    <Image Source="{Binding SpriteUrl}" Width="55" Height="55" Margin="0,0,12,0"/>
+                                <WrapPanel>
+                                    <TextBlock Text="HP: " Foreground="#64748B"/>
+                                    <TextBlock Text="{Binding HP}" FontWeight="Bold" Margin="0,0,8,0"/>
+                                    <TextBlock Text="ATK: " Foreground="#64748B"/>
+                                    <TextBlock Text="{Binding Attack}" FontWeight="Bold" Margin="0,0,8,0"/>
+                                    <TextBlock Text="DEF: " Foreground="#64748B"/>
+                                    <TextBlock Text="{Binding Defense}" FontWeight="Bold"/>
+                                </WrapPanel>
+                            </StackPanel>
 
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding name}" FontSize="16" FontWeight="Bold" Foreground="#1E293B"/>
-                                        <TextBlock Text="{Binding CompetitiveRole}" FontSize="12" Foreground="#059669" FontWeight="SemiBold" Margin="0,3,0,0"/>
-                                    </StackPanel>
-                                </StackPanel>
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                <TextBlock Text="PODER TOTAL" FontSize="10" Foreground="#94A3B8" HorizontalAlignment="Right"/>
+                                <TextBlock Text="{Binding BaseStatTotal}" FontSize="24" FontWeight="Black" Foreground="#EF4444" HorizontalAlignment="Right"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
-                                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center">
-                                    <TextBlock Text="TOTAL STATUS" FontSize="9" HorizontalAlignment="Center" Foreground="#64748B"/>
-                                    <TextBlock Text="{Binding BaseStatTotal}" FontSize="16" FontWeight="Bold" Foreground="#EA580C"/>
-                                </StackPanel>
-
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="15">
+            <Button x:Name="BtnCarregar" Content="ATUALIZAR DADOS" Click="BtnCarregar_Click" Padding="20,10" Background="#3B82F6" Foreground="White" FontWeight="Bold" Margin="0,0,10,0"/>
+            <Button x:Name="BtnExportar" Content="SALVAR PDF" Click="BtnExportar_Click" Padding="20,10" Background="#10B981" Foreground="White" FontWeight="Bold"/>
         </StackPanel>
     </Grid>
 </Window>
