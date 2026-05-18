@@ -18,17 +18,18 @@ namespace PokeAPI.Services
 
         public async Task<List<PokemonDTO>> GetPokemonsAsync()
         {
-            // Quando o Erick entregar a API, coloque o link dele aqui
-            string url = "COLOQUE_O_LINK_DA_API_AQUI";
+            // URL oficial da API que foi fornecida para o projeto
+            string url = "https://apimonsterdeconexao-366354054678.southamerica-east1.run.app";
 
             for (int i = 0; i < 3; i++)
             {
                 try
                 {
-                    // Consome os dados que o Vinícius salvou e o Erick disponibilizou
+                    // Consome os dados reais do JSON direto do servidor em nuvem
                     var dadosRecebidos = await client.GetFromJsonAsync<List<PokemonDTO>>(url);
 
-                    return LimparDados(dadosRecebidos);
+                    // Garante que se a API responder algo vazio, o sistema não quebra
+                    return LimparDados(dadosRecebidos ?? new List<PokemonDTO>());
                 }
                 catch (Exception ex)
                 {
@@ -47,13 +48,14 @@ namespace PokeAPI.Services
 
             foreach (var p in pokemons)
             {
-                // Tratamento básico de nulos
+                // Tratamento básico de nulos para segurança do relatório
                 if (string.IsNullOrEmpty(p.name)) p.name = "Desconhecido";
                 if (p.Tipos == null || p.Tipos.Count == 0) p.Tipos = new List<string> { "Normal" };
 
-                // geração dos relatórios
+                // Regra do Relatório: Gera o Total de Status automaticamente
                 p.BaseStatTotal = p.HP + p.Attack + p.Defense + p.SpAttack + p.SpDefense + p.Speed;
 
+                // Define a classificação competitiva baseada nos atributos recebidos
                 if (p.Attack > p.Defense)
                 {
                     p.CompetitiveRole = "Physical Sweeper";
@@ -63,7 +65,7 @@ namespace PokeAPI.Services
                     p.CompetitiveRole = "Wall / Tank";
                 }
 
-                // Configura metadados para auditoria do relatório
+                // Metadados locais da aplicação
                 p.DataColeta = DateTime.Now;
                 p.EnviadoParaNuvem = false;
             }
