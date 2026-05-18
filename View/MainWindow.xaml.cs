@@ -25,15 +25,24 @@ namespace PokeAPI.View
             try
             {
                 BtnCarregar.IsEnabled = false;
+                ListaPokemons.ItemsSource = null;
 
+                // Chama a service com a URL e os cabeçalhos corretos configurados
                 _dadosAtuais = await _apiService.GetPokemonsAsync();
-                ListaPokemons.ItemsSource = _dadosAtuais;
 
-                MessageBox.Show("Dados carregados com sucesso!", "PokeAPI");
+                if (_dadosAtuais == null || _dadosAtuais.Count == 0)
+                {
+                    MessageBox.Show("Nenhum Pokémon válido encontrado no servidor do Erick.", "Aviso");
+                    return;
+                }
+
+                // Vincula os dados diretamente na tela do app
+                ListaPokemons.ItemsSource = _dadosAtuais;
+                MessageBox.Show($"Sucesso! {_dadosAtuais.Count} Pokémon(s) carregados da nuvem.", "PokeAPI");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao carregar: " + ex.Message, "Erro");
+                MessageBox.Show("Erro ao conectar ou ler os dados:\n\n" + ex.Message, "Erro de Conexão");
             }
             finally
             {
@@ -41,7 +50,6 @@ namespace PokeAPI.View
             }
         }
 
-        // Nova lógica de exportação focada em persistência de arquivos (.txt)
         private void BtnExportar_Click(object sender, RoutedEventArgs e)
         {
             if (_dadosAtuais == null || _dadosAtuais.Count == 0)
@@ -69,7 +77,8 @@ namespace PokeAPI.View
 
                         foreach (var p in _dadosAtuais)
                         {
-                            sw.WriteLine($"Nome: {p.name}");
+                            sw.WriteLine($"Nome: {p.NomeExibicao}");
+                            sw.WriteLine($"Tipos: {string.Join(", ", p.Tipos)}");
                             sw.WriteLine($"Função Competitiva: {p.CompetitiveRole}");
                             sw.WriteLine($"Status base -> HP: {p.HP} | ATK: {p.Attack} | DEF: {p.Defense}");
                             sw.WriteLine($"Poder Total (BST): {p.BaseStatTotal}");

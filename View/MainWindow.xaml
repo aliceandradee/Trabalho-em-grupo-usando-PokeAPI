@@ -26,25 +26,26 @@
                                 <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
 
-                            <Image Source="{Binding SpriteUrl}" Grid.Column="0" Width="70" Height="70" Stretch="Uniform"/>
+                            <Image Grid.Column="0" Source="{Binding SpriteUrl}" Width="80" Height="80"/>
 
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0">
-                                <TextBlock Text="{Binding name}" FontSize="18" FontWeight="Bold" Foreground="#1E293B"/>
-                                <TextBlock Text="{Binding CompetitiveRole}" FontSize="13" Foreground="#059669" FontWeight="SemiBold" Margin="0,2,0,5"/>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock Text="{Binding NomeExibicao}" FontSize="18" FontWeight="Bold"/>
 
-                                <WrapPanel>
-                                    <TextBlock Text="HP: " Foreground="#64748B"/>
-                                    <TextBlock Text="{Binding HP}" FontWeight="Bold" Margin="0,0,8,0"/>
-                                    <TextBlock Text="ATK: " Foreground="#64748B"/>
-                                    <TextBlock Text="{Binding Attack}" FontWeight="Bold" Margin="0,0,8,0"/>
-                                    <TextBlock Text="DEF: " Foreground="#64748B"/>
+                                <TextBlock Text="{Binding CompetitiveRole}" Foreground="Green"/>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="HP: "/>
+                                    <TextBlock Text="{Binding HP}" FontWeight="Bold"/>
+                                    <TextBlock Text=" ATK: " Margin="5,0,0,0"/>
+                                    <TextBlock Text="{Binding Attack}" FontWeight="Bold"/>
+                                    <TextBlock Text=" DEF: " Margin="5,0,0,0"/>
                                     <TextBlock Text="{Binding Defense}" FontWeight="Bold"/>
-                                </WrapPanel>
+                                </StackPanel>
                             </StackPanel>
 
                             <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
                                 <TextBlock Text="PODER TOTAL" FontSize="10" Foreground="#94A3B8" HorizontalAlignment="Right"/>
-                                <TextBlock Text="{Binding BaseStatTotal}" FontSize="24" FontWeight="Black" Foreground="#EF4444" HorizontalAlignment="Right"/>
+                                <TextBlock Text="{Binding BaseStatTotal}" FontSize="20" FontWeight="Bold" Foreground="Red" HorizontalAlignment="Right"/>
                             </StackPanel>
                         </Grid>
                     </Border>
@@ -54,7 +55,7 @@
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="15">
             <Button x:Name="BtnCarregar" Content="ATUALIZAR DADOS" Click="BtnCarregar_Click" Padding="20,10" Background="#3B82F6" Foreground="White" FontWeight="Bold" Margin="0,0,10,0"/>
-            <Button x:Name="BtnExportar" Content="SALVAR PDF" Click="BtnExportar_Click" Padding="20,10" Background="#10B981" Foreground="White" FontWeight="Bold"/>
+            <Button x:Name="BtnExportar" Content="SALVAR RELATÓRIO" Click="BtnExportar_Click" Padding="20,10" Background="#10B981" Foreground="White" FontWeight="Bold"/>
         </StackPanel>
     </Grid>
 </Window>
