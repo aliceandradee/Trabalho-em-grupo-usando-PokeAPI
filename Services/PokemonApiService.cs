@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace PokeAPI.Services
 {
-    // CORRIGIDO: Removido o 's' de Pokemons para casar exatamente com o construtor e o arquivo
     public class PokemonApiService
     {
         private readonly HttpClient client;
@@ -26,7 +25,7 @@ namespace PokeAPI.Services
             {
                 try
                 {
-                    // Consome os dados brutos que o Vinícius salvou e o Erick disponibilizou
+                    // Consome os dados que o Vinícius salvou e o Erick disponibilizou
                     var dadosRecebidos = await client.GetFromJsonAsync<List<PokemonDTO>>(url);
 
                     return LimparDados(dadosRecebidos);
@@ -52,7 +51,7 @@ namespace PokeAPI.Services
                 if (string.IsNullOrEmpty(p.name)) p.name = "Desconhecido";
                 if (p.Tipos == null || p.Tipos.Count == 0) p.Tipos = new List<string> { "Normal" };
 
-                // A SUA PARTE: Inteligência de dados para gerar os relatórios
+                // geração dos relatórios
                 p.BaseStatTotal = p.HP + p.Attack + p.Defense + p.SpAttack + p.SpDefense + p.Speed;
 
                 if (p.Attack > p.Defense)
