@@ -1,79 +1,88 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using PokeAPI.Services;
+using Microsoft.Win32;
 using PokeAPI.Models;
+using PokeAPI.Services;
 
 namespace PokeAPI.View
 {
     public partial class MainWindow : Window
     {
         private readonly PokemonApiService _apiService;
-        private List<PokemonDTO>? _dadosAtuais;
+        private List<PokemonDTO> _dadosAtuais;
 
         public MainWindow()
         {
             InitializeComponent();
             _apiService = new PokemonApiService();
+            _dadosAtuais = new List<PokemonDTO>();
         }
 
         private async void BtnCarregar_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (sender is Button btn) btn.IsEnabled = false;
+                BtnCarregar.IsEnabled = false;
 
-                // 1. Busca os dados na API do Erick
                 _dadosAtuais = await _apiService.GetPokemonsAsync();
-
-                // 2. Vincula a lista com todas as propriedades ao ListBox
                 ListaPokemons.ItemsSource = _dadosAtuais;
 
-                MessageBox.Show("Relatório atualizado com sucesso!", "PokeAPI");
+                MessageBox.Show("Dados carregados com sucesso!", "PokeAPI");
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao carregar dados: " + ex.Message, "Erro");
+                MessageBox.Show("Erro ao carregar: " + ex.Message, "Erro");
             }
             finally
             {
-                if (sender is Button btn) btn.IsEnabled = true;
+                BtnCarregar.IsEnabled = true;
             }
         }
 
-        // NOVA LÓGICA: Exportar para PDF de forma nativa (Sem bibliotecas estranhas)
+        // Nova lógica de exportação focada em persistência de arquivos (.txt)
         private void BtnExportar_Click(object sender, RoutedEventArgs e)
         {
             if (_dadosAtuais == null || _dadosAtuais.Count == 0)
             {
-                MessageBox.Show("Não há dados carregados para salvar. Clique em ATUALIZAR DADOS primeiro.", "Aviso");
+                MessageBox.Show("Carregue os dados antes de exportar.", "Aviso");
                 return;
             }
 
             try
             {
-                // Abre a caixinha nativa de impressão do Windows
-                PrintDialog caixaImpressao = new PrintDialog();
-
-                if (caixaImpressao.ShowDialog() == true)
+                SaveFileDialog salvarArquivo = new SaveFileDialog
                 {
-                    // Altera temporariamente a dica visual do botão para o usuário saber que está salvando
-                    if (sender is Button btn) btn.Content = "SALVANDO...";
+                    Filter = "Arquivo de Texto (*.txt)|*.txt",
+                    FileName = "Relatorio_Pokemon"
+                };
 
-                    // Manda o Windows imprimir o componente "ListaPokemons" direto como documento/PDF
-                    caixaImpressao.PrintVisual(ListaPokemons, "Relatório Estratégico Pokémon");
+                if (salvarArquivo.ShowDialog() == true)
+                {
+                    using (StreamWriter sw = new StreamWriter(salvarArquivo.FileName))
+                    {
+                        sw.WriteLine("=========================================");
+                        sw.WriteLine("       RELATÓRIO ESTRATÉGICO POKÉMON     ");
+                        sw.WriteLine("=========================================");
+                        sw.WriteLine($"Gerado em: {DateTime.Now}\n");
 
-                    MessageBox.Show("Relatório enviado para salvar/imprimir com sucesso!", "Sucesso");
+                        foreach (var p in _dadosAtuais)
+                        {
+                            sw.WriteLine($"Nome: {p.name}");
+                            sw.WriteLine($"Função Competitiva: {p.CompetitiveRole}");
+                            sw.WriteLine($"Status base -> HP: {p.HP} | ATK: {p.Attack} | DEF: {p.Defense}");
+                            sw.WriteLine($"Poder Total (BST): {p.BaseStatTotal}");
+                            sw.WriteLine("-----------------------------------------");
+                        }
+                    }
+
+                    MessageBox.Show("Relatório em texto exportado com sucesso!", "Sucesso");
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao tentar salvar o documento: " + ex.Message, "Erro");
-            }
-            finally
-            {
-                if (sender is Button btn) btn.Content = "SALVAR PDF";
+                MessageBox.Show("Erro ao salvar arquivo: " + ex.Message, "Erro");
             }
         }
     }
